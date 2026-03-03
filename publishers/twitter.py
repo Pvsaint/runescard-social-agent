@@ -54,7 +54,16 @@ class TwitterPublisher:
         if len(text) > 280:
             raise ValueError(f"Tweet exceeds 280 chars ({len(text)}).")
 
-        response = self._client.create_tweet(text=text)
-        tweet_id = response.data["id"]
-        logger.info(f"[Twitter] Posted tweet ID: {tweet_id}")
-        return {"id": tweet_id, "text": text}
+        try:
+            # We add user_auth=True to explicitly use OAuth 1.0a User Context
+            response = self._client.create_tweet(text=text, user_auth=True)
+            
+            # The Free tier sometimes omits response.data entirely
+            tweet_id = response.data["id"] if getattr(response, "data", None) else "unknown_id"
+            logger.info(f"[Twitter] Posted tweet ID: {tweet_id}")
+            return {"id": tweet_id, "text": text}
+            
+        except Exception as e:
+            if "402 Payment Required" in str(e) or "403 Forbidden" in str(e):
+               raise Exception("Twitter API no longer supports free automated posting. Please subscribe to a Basic/Pay-Per-Use tier, or use the 'Copy' button to post manually.") from e
+            raise

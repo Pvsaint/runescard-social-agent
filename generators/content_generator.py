@@ -74,13 +74,12 @@ class ContentGenerator:
 
     def _init_client(self):
         if self.provider == "gemini":
-            import google.generativeai as genai  # type: ignore
+            from google import genai  # type: ignore
 
             api_key = os.getenv("GEMINI_API_KEY")
             if not api_key:
                 raise EnvironmentError("GEMINI_API_KEY is not set.")
-            genai.configure(api_key=api_key)
-            return genai.GenerativeModel("gemini-2.0-flash")
+            return genai.Client(api_key=api_key)
 
         elif self.provider == "openai":
             from openai import OpenAI  # type: ignore
@@ -118,7 +117,10 @@ class ContentGenerator:
         prompt = _build_prompt(platform, post_type, extra_hint)
 
         if self.provider == "gemini":
-            response = self._client.generate_content(prompt)
+            response = self._client.models.generate_content(
+                model="gemini-2.0-flash",
+                contents=prompt,
+            )
             text = response.text.strip()
 
         else:  # openai

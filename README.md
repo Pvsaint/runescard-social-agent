@@ -49,13 +49,13 @@ Open `.env` and fill in your credentials (see [API Keys](#api-keys) below).
 Preview generated content without posting anything:
 
 ```bash
-python agent.py --dry-run
+python3 agent.py --dry-run
 ```
 
 ### 5. Go live
 
 ```bash
-python agent.py --live
+python3 agent.py --live
 ```
 
 ---
@@ -63,7 +63,7 @@ python agent.py --live
 ## CLI Usage
 
 ```
-python agent.py [options]
+python3 agent.py [options]
 
 Options:
   --dry-run               Preview content without posting (safe default)
@@ -89,16 +89,16 @@ Options:
 
 ```bash
 # Generate one post per platform in dry-run
-python agent.py --dry-run
+python3 agent.py --dry-run
 
 # Educational tweet only
-python agent.py --platform twitter --post-type educational
+python3 agent.py --platform twitter --post-type educational
 
 # Post with a specific hook, live
-python agent.py --hint "we just hit 10,000 cards sent!" --live
+python3 agent.py --hint "we just hit 10,000 cards sent!" --live
 
 # Farcaster CTA, dry-run
-python agent.py --platform farcaster --post-type call_to_action --dry-run
+python3 agent.py --platform farcaster --post-type call_to_action --dry-run
 ```
 
 ---
@@ -108,7 +108,7 @@ python agent.py --platform farcaster --post-type call_to_action --dry-run
 Run the scheduler daemon to post automatically throughout the day:
 
 ```bash
-python scheduler.py
+python3 scheduler.py
 ```
 
 Posts are distributed evenly across 16 waking hours based on `POST_FREQUENCY`.
@@ -116,7 +116,7 @@ Posts are distributed evenly across 16 waking hours based on `POST_FREQUENCY`.
 Run once immediately, then exit:
 
 ```bash
-python scheduler.py --once
+python3 scheduler.py --once
 ```
 
 ---
@@ -180,9 +180,9 @@ This file is injected as context into every LLM prompt.
 
 ## Deployment Options
 
-| Option             | Notes                                                                    |
-| ------------------ | ------------------------------------------------------------------------ |
-| **Local cron**     | `0 9,13,17 * * * /path/to/.venv/bin/python /path/to/scheduler.py --once` |
-| **Railway worker** | Add a `Procfile`: `worker: python scheduler.py`                          |
-| **GitHub Actions** | Trigger on schedule with `workflow_dispatch`                             |
-| **Docker**         | Wrap with a simple `Dockerfile` + `CMD ["python", "scheduler.py"]`       |
+| Option             | Notes                                                                     |
+| ------------------ | ------------------------------------------------------------------------- |
+| **Local cron**     | `0 9,13,17 * * * /path/to/.venv/bin/python3 /path/to/scheduler.py --once` |
+| **Railway worker** | Add a `Procfile`: `worker: python3 scheduler.py`                          |
+| **GitHub Actions** | Trigger on schedule with `workflow_dispatch`                              |
+| **Docker**         | Wrap with a simple `Dockerfile` + `CMD ["python3", "scheduler.py"]`       |
